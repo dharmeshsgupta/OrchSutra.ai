@@ -1,0 +1,137 @@
+.site-footer {
+  background-color: #0b0f19;
+  border-top: 1px solid #1f2937;
+  padding: 3rem 1.5rem 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #fff;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  justify-content: space-between;
+}
+
+.footer-col-brand {
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.brand-wrapper {
+  margin-bottom: 1rem;
+}
+
+.brand-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.char-blue { color: #3b82f6; }
+.char-red { color: #ef4444; }
+.char-yellow { color: #eab308; }
+.char-green { color: #22c55e; }
+
+.brand-desc {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  max-width: 250px;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #1f2937;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.social-icon:hover {
+  color: #fff;
+  background-color: #374151;
+}
+
+.footer-nav-cols {
+  display: flex;
+  flex: 2 1 auto;
+  gap: 2rem;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.footer-col {
+  min-width: 120px;
+}
+
+.footer-col-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-col a {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(31, 41, 55, 0.5);
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.footer-copyright {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.brand-text-sm {
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .footer-nav-cols {
+    justify-content: flex-start;
+    gap: 3rem;
+  }
+}

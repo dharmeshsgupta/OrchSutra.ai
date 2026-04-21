@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple API Key Tester Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .chat-container { background: white; width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; height: 85vh; }
+        .header { padding: 15px; background: #2c3e50; color: white; text-align: center; font-weight: bold; font-size: 1.2em; }
+        .settings-panel { padding: 15px; background: #ecf0f1; border-bottom: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; }
+        .form-group { display: flex; align-items: center; gap: 10px; }
+        .form-group label { width: 100px; font-weight: bold; font-size: 0.9em; }
+        .form-group input, .form-group select { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .chat-history { flex-grow: 1; padding: 15px; overflow-y: auto; background: #fafafa; display: flex; flex-direction: column; gap: 12px; }
+        .message { padding: 12px; border-radius: 8px; max-width: 80%; word-wrap: break-word; line-height: 1.4; }
+        .message.user { background: #007bff; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .message.assistant { background: #e9ecef; color: black; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .message.error { background: #ffebee; color: #dc3545; align-self: center; font-size: 0.85em; width: 90%; text-align: center; border: 1px solid #f5c6cb; }
+        .input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; gap: 10px; }
+        .input-area input { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 4px; outline: none; transition: border-color 0.2s; }
+        .input-area input:focus { border-color: #007bff; }
+        .input-area button { padding: 12px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        .input-area button:hover { background: #218838; }
+        .input-area button:disabled { background: #6c757d; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">API Tester Chat</div>
+    
+    <div class="settings-panel">
+        <div class="form-group">
+            <label for="apiKey">API Key:</label>
+            <input type="password" id="apiKey" placeholder="Paste your generated API Key here..." />
+        </div>
+        <div class="form-group">
+            <label for="modelSelect">Model:</label>
+            <select id="modelSelect">
+                <option value="groq-llama-3.3-70b">Llama 3 70B (Groq)</option>
+                <option value="gemini/gemini-1.5-flash-latest">Gemini 1.5 Flash (Gemini)</option>
+                <option value="openai/gpt-3.5-turbo">GPT-3.5 Turbo (OpenAI)</option>
+                <option value="openai/gpt-4o">GPT-4o (OpenAI)</option>
+                <option value="anthropic/claude-3">Claude 3 (Anthropic)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="chat-history" id="chatHistory">
+        <div class="message assistant">Hello! Please enter your API key above, pick a model, and start chatting.</div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Type a message..." />
+        <button id="sendBtn">Send</button>
+    </div>
+</div>
+
+<script>
+    const backendBaseUrl = 'http://localhost:3000';
+    const chatHistory = document.getElementById('chatHistory');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const modelSelect = document.getElementById('modelSelect');
+    let messages = [];
+
+    messageInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+    sendBtn.addEventListener('click', sendMessage);
+
+    // Always load model IDs from backend to avoid stale hardcoded options.
+    loadModels();
+
+    async function loadModels() {
+        try {
+            const response = await fetch(backendBaseUrl + '/models');
+            const data = await response.json();
+            if (!response.ok || !data.models || !Array.isArray(data.models)) {
+                return;
+            }
+
+            modelSelect.innerHTML = '';
+            data.models
+                .filter(function (m) { return m.is_active; })
+                .forEach(function (m) {
+                    const option = document.createElement('option');
+                    option.value = m.id;
+                    option.textContent = m.name + ' (' + m.id + ')';
+                    modelSelect.appendChild(option);
+                });
+        } catch (error) {
+            // Keep fallback hardcoded options if backend is unavailable.
+        }
+    }
+
+    async function sendMessage() {
+        const apiKey = document.getElementById('apiKey').value.trim();
+        const model = document.getElementById('modelSelect').value;
+        const text = messageInput.value.trim();
+
+        if (!text) return;
+        
+        appendMessage('user', text);
+        messageInput.value = '';
+        messageInput.disabled = true;
+        sendBtn.disabled = true;
+
+        messages.push({ role: 'user', content: text });
+
+        try {
+            // Send to your backend router running on port 3000
+            const response = await fetch(backendBaseUrl + '/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': apiKey ? 'Bearer ' + apiKey : ''
+                },
+                body: JSON.stringify({
+                    messages: messages,
+                    selected_model_id: model,
+                    auto_switch: false, // Keep errors tied to selected model only
+                    parameters: {}
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                const errorDetail = data && data.detail ? data.detail : data;
+                let errorMsg = typeof errorDetail === 'string' ? errorDetail : JSON.stringify(errorDetail);
+                appendMessage('error', 'Request failed: ' + errorMsg);
+                messages.pop(); // Remove the user message from memory if failed
+            } else {
+                const assistantMessage = data.content || "No response content received.";
+                appendMessage('assistant', assistantMessage);
+                messages.push({ role: 'assistant', content: assistantMessage });
+            }
+        } catch (error) {
+            appendMessage('error', 'Network/CORS error: Make sure http://localhost:3000 is running and allows CORS! Detail: ' + error.message);
+            messages.pop();
+        } finally {
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+    }
+
+    function appendMessage(role, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message ' + role;
+        msgDiv.textContent = text;
+        chatHistory.appendChild(msgDiv);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+</script>
+</body>
+</html>

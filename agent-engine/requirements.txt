@@ -1,0 +1,22 @@
+# ── Core API ──
+fastapi
+uvicorn
+httpx
+pydantic
+pydantic-settings
+python-dotenv
+
+# ── LLM Orchestration ──
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langgraph>=0.2.0
+tiktoken>=0.7.0
+
+# ── Vector Store / RAG ──
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+
+# ── Database ──
+aiosqlite>=0.20.0
+sqlalchemy>=2.0.0

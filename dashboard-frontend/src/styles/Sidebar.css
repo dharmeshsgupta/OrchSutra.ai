@@ -1,0 +1,215 @@
+/* ================================================================
+   Sidebar Styles
+   ================================================================ */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  background: #0f0f2a;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+/* ── Dashboard with sidebar layout ── */
+.dashboard-with-sidebar {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-with-sidebar .dashboard-container {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── User card ── */
+.sidebar-user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4285F4;
+}
+
+.sidebar-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4285F4, #764ba2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  overflow: hidden;
+}
+
+.sidebar-user-name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-email {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Navigation ── */
+.sidebar-nav {
+  flex: 1;
+  padding: 0 0.75rem;
+}
+
+.sidebar-section-title {
+  margin: 1.25rem 0 0.5rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #555;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  color: #aaa;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.sidebar-link:hover {
+  background: rgba(66, 133, 244, 0.08);
+  color: #e0e0e0;
+}
+
+.sidebar-link-active {
+  background: rgba(66, 133, 244, 0.15);
+  color: #4285F4;
+  font-weight: 600;
+}
+
+.sidebar-link-active:hover {
+  background: rgba(66, 133, 244, 0.2);
+  color: #4285F4;
+}
+
+.sidebar-link-icon {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ── Layout: sidebar + main content ── */
+.layout-with-sidebar {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content-with-sidebar {
+  margin-left: 260px;
+  flex: 1;
+  min-height: 100vh;
+  width: calc(100% - 260px);
+}
+
+/* ── Responsive ── */
+
+/* Tablets — narrower sidebar */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 230px;
+    min-width: 230px;
+  }
+
+  .main-content-with-sidebar {
+    margin-left: 230px;
+    width: calc(100% - 230px);
+  }
+}
+
+/* Small tablets & phones — sidebar becomes overlay drawer */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 270px;
+    min-width: 270px;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 150;
+    box-shadow: none;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .dashboard-with-sidebar {
+    flex-direction: column;
+  }
+
+  .dashboard-with-sidebar .dashboard-container {
+    width: 100%;
+  }
+
+  .main-content-with-sidebar {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+  }
+
+  .sidebar-link {
+    font-size: 0.84rem;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .sidebar-user-card {
+    padding: 0.65rem 1rem 1rem;
+  }
+}
