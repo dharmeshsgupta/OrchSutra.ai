@@ -58,6 +58,11 @@ const Sidebar: React.FC<SidebarProps> = ({ className = '' }) => {
           Agent Builder
         </NavLink>
 
+        <NavLink to="/LLM_sampling_parameters" className={({ isActive }) => `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`}>
+          <span className="sidebar-link-icon">🧪</span>
+          LLM Sampling Parameters
+        </NavLink>
+
         <p className="sidebar-section-title">Account</p>
 
         <NavLink to="/edit-profile" className={({ isActive }) => `sidebar-link ${isActive ? 'sidebar-link-active' : ''}`}>

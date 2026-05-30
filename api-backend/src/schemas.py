@@ -86,3 +86,21 @@ class ModelResponse(BaseModel):
 
 class GetModelsResponseSchema(BaseModel):
     models: List[ModelResponse]
+
+
+class PieSlice(BaseModel):
+    name: str
+    value: float
+
+
+class ParameterMetrics(BaseModel):
+    average: Optional[float] = None
+    by_model: List[PieSlice] = []
+    by_provider: List[PieSlice] = []
+    buckets: List[PieSlice] = []
+
+
+class SamplingMetricsResponse(BaseModel):
+    range: str
+    totals: Dict[str, float] = {}
+    metrics: Dict[str, ParameterMetrics] = {}

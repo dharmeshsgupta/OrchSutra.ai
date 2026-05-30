@@ -13,6 +13,7 @@ import RankingsPage from './pages/RankingsPage';
 import AppsPage from './pages/AppsPage.tsx';
 import AppDetailPage from './pages/AppDetailPage';
 import AgentBuilderPage from './pages/AgentBuilderPage';
+import LLMSamplingParametersPage from './pages/LLMSamplingParametersPage';
 import OtpVerificationPage from './pages/OtpVerificationPage';
 import ChatPage from './pages/ChatPage';
 import PricingPage from './pages/PricingPage';
@@ -573,6 +574,14 @@ const AppContent: React.FC = () => {
             element={
               <ProtectedRoute>
                 <AgentBuilderPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/LLM_sampling_parameters"
+            element={
+              <ProtectedRoute>
+                <LLMSamplingParametersPage />
               </ProtectedRoute>
             }
           />

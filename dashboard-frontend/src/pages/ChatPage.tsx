@@ -504,6 +504,7 @@ const ChatPage: React.FC = () => {
   const [models, setModels] = useState<Model[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [showModelSelector, setShowModelSelector] = useState(false);
+  const [providersCount, setProvidersCount] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [autoMode, setAutoMode] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -523,14 +524,16 @@ const ChatPage: React.FC = () => {
   useEffect(() => {
     const loadModels = async () => {
       try {
-        const [fetched, chatOptions] = await Promise.all([
+        const [fetched, chatOptions, providers] = await Promise.all([
           ModelsService.getModels(),
           ChatService.getModelOptions().catch(() => []),
+          ModelsService.getProviders(),
         ]);
 
         const backendOptions = chatOptions.filter((opt) => opt.is_active).map(mapChatOptionToModel);
         const merged = backendOptions.length > 0 ? backendOptions : mergeDirectModels(fetched);
         setModels(merged);
+        setProvidersCount(providers.length);
 
         const defaultFromApi = chatOptions.find((opt) => opt.is_default && opt.is_active)?.id;
         const saved = localStorage.getItem(PREF_KEY);
@@ -543,6 +546,7 @@ const ChatPage: React.FC = () => {
         }
       } catch (err) {
         console.error('Failed to load models', err);
+        setProvidersCount(0);
       }
     };
     loadModels();
@@ -1224,6 +1228,17 @@ const ChatPage: React.FC = () => {
                 <span className="shortcut">⌘ K</span>
               </button>
             )}
+          </div>
+
+          <div className="model-stats">
+            <div className="model-stat">
+              <span className="model-stat-value">{models.length}</span>
+              <span className="model-stat-label">Models</span>
+            </div>
+            <div className="model-stat">
+              <span className="model-stat-value">{providersCount}</span>
+              <span className="model-stat-label">Providers</span>
+            </div>
           </div>
 
           <label className="auto-toggle">

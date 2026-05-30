@@ -1,4 +1,5 @@
 import apiClient from './apiClient';
+import { ChatService } from './chatService';
 
 export interface Company {
   id: string;
@@ -44,8 +45,55 @@ export const ModelsService = {
    */
   getModels: async (): Promise<Model[]> => {
     try {
-      const response = await apiClient.get('/models/');
-      return response.data.models;
+      // Fetch both sources in parallel
+      const [modelsResponse, chatOptions] = await Promise.all([
+        apiClient.get('/models/').catch(() => ({ data: { models: [] } })),
+        ChatService.getModelOptions().catch(() => []),
+      ]);
+
+      const payload = modelsResponse.data;
+      const dbModels: Model[] = Array.isArray(payload?.models)
+        ? payload.models
+        : Array.isArray(payload)
+          ? payload
+          : [];
+
+      // Convert chat options to Model shape
+      const chatModels: Model[] = chatOptions.map((option) => ({
+        id: option.id,
+        name: option.name,
+        slug: option.id,
+        description: option.description ?? null,
+        context_window: 0,
+        speed_rating: 0,
+        featured: option.is_default,
+        logo_url: null,
+        release_date: null,
+        max_tokens: 0,
+        company_name: option.provider_name,
+        priority: 100,
+        fallback_group: option.provider_name,
+        is_active: option.is_active,
+      }));
+
+      // Merge: DB models take priority, then add chat options not already present
+      const seenIds = new Set(dbModels.map((m) => m.id));
+      const seenSlugs = new Set(dbModels.map((m) => m.slug));
+      const merged = [...dbModels];
+
+      for (const cm of chatModels) {
+        if (!seenIds.has(cm.id) && !seenSlugs.has(cm.slug)) {
+          merged.push(cm);
+          seenIds.add(cm.id);
+          seenSlugs.add(cm.slug);
+        }
+      }
+
+      if (merged.length > 0) {
+        return merged;
+      }
+
+      return [];
     } catch (error) {
       // Return sample data on failure
       return [
@@ -98,8 +146,36 @@ export const ModelsService = {
    */
   getProviders: async (): Promise<Provider[]> => {
     try {
-      const response = await apiClient.get('/models/providers');
-      return response.data.providers;
+      const [providersResponse, models] = await Promise.all([
+        apiClient.get('/models/providers').catch(() => ({ data: { providers: [] } })),
+        ModelsService.getModels().catch(() => []),
+      ]);
+
+      const dbProviders: Provider[] = Array.isArray(providersResponse.data?.providers)
+        ? providersResponse.data.providers
+        : [];
+
+      // Extract unique provider names from all models
+      const modelProviderNames = Array.from(
+        new Set(models.map((m) => m.company_name).filter(Boolean))
+      );
+
+      // Merge: DB providers first, then add any from models not already present
+      const seenNames = new Set(dbProviders.map((p) => p.name.toLowerCase()));
+      const merged = [...dbProviders];
+
+      for (const name of modelProviderNames) {
+        if (!seenNames.has(name.toLowerCase())) {
+          merged.push({ id: name, name, website: '' });
+          seenNames.add(name.toLowerCase());
+        }
+      }
+
+      if (merged.length > 0) {
+        return merged;
+      }
+
+      return [];
     } catch (error) {
       // Return sample data on failure
       return [

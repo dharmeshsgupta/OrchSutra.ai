@@ -190,7 +190,12 @@ const AgentBuilderPage: React.FC = () => {
     <>
       <Navbar />
       <div className="dashboard-with-sidebar">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        {/* Mobile overlay */}
+        <div
+          className={`sidebar-overlay ${sidebarOpen ? 'visible' : ''}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+        <Sidebar className={sidebarOpen ? 'sidebar-open' : ''} />
         <main className="dashboard-content dashboard-fadeIn">
           <div className="ab-page">
             <div className="ab-hero">
@@ -527,6 +532,15 @@ const AgentBuilderPage: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Mobile sidebar toggle */}
+      <button
+        className="sidebar-toggle-btn"
+        onClick={() => setSidebarOpen(prev => !prev)}
+        aria-label="Toggle sidebar"
+      >
+        {sidebarOpen ? '✕' : '☰'}
+      </button>
     </>
   );
 };
