@@ -51,12 +51,30 @@ export const ModelsService = {
         ChatService.getModelOptions().catch(() => []),
       ]);
 
+      const normalizeCompanyName = (name: string): string => {
+        const lower = (name || '').toLowerCase().trim();
+        if (lower === 'openai') return 'OpenAI';
+        if (lower === 'anthropic') return 'Anthropic';
+        if (lower === 'google' || lower === 'gemini') return 'Google';
+        if (lower === 'groq') return 'Groq';
+        if (lower === 'deepseek') return 'DeepSeek';
+        if (lower === 'mistral' || lower === 'mistral ai') return 'Mistral AI';
+        if (lower === 'sarvam') return 'Sarvam';
+        if (lower === 'meta') return 'Meta';
+        return name ? (name.charAt(0).toUpperCase() + name.slice(1)) : 'Unknown';
+      };
+
       const payload = modelsResponse.data;
-      const dbModels: Model[] = Array.isArray(payload?.models)
+      const rawDbModels: Model[] = Array.isArray(payload?.models)
         ? payload.models
         : Array.isArray(payload)
           ? payload
           : [];
+
+      const dbModels = rawDbModels.map(m => ({
+        ...m,
+        company_name: normalizeCompanyName(m.company_name),
+      }));
 
       // Convert chat options to Model shape
       const chatModels: Model[] = chatOptions.map((option) => ({
@@ -70,7 +88,7 @@ export const ModelsService = {
         logo_url: null,
         release_date: null,
         max_tokens: 0,
-        company_name: option.provider_name,
+        company_name: normalizeCompanyName(option.provider_name),
         priority: 100,
         fallback_group: option.provider_name,
         is_active: option.is_active,
@@ -92,6 +110,7 @@ export const ModelsService = {
       if (merged.length > 0) {
         return merged;
       }
+
 
       return [];
     } catch (error) {
@@ -279,6 +298,43 @@ export const ModelsService = {
   updateFallbackGroup: async (modelId: string, fallback_group: string | null): Promise<Model> => {
     const response = await apiClient.patch(`/models/${modelId}/fallback`, { fallback_group });
     return response.data;
+  },
+};
+
+// ============== MODEL STATS ==============
+
+export interface ModelStats {
+  model_id: string;
+  weekly_tokens: number;
+  weekly_tokens_label: string;  // e.g. "146.6B"
+  trend_percent: number;
+  trend_label: string;           // e.g. "+12%" or "-5%"
+}
+
+export const ModelStatsService = {
+  /** Fetch weekly stats for a single model. */
+  getModelStats: async (modelId: string): Promise<ModelStats | null> => {
+    try {
+      const response = await apiClient.get(`/models/${modelId}/stats`);
+      return response.data as ModelStats;
+    } catch {
+      return null;
+    }
+  },
+
+  /** Fetch weekly stats for ALL models in one request (used by homepage). */
+  getAllModelStats: async (): Promise<Record<string, ModelStats>> => {
+    try {
+      const response = await apiClient.get('/models/stats/all');
+      const list: ModelStats[] = response.data?.stats ?? [];
+      const map: Record<string, ModelStats> = {};
+      for (const s of list) {
+        map[s.model_id] = s;
+      }
+      return map;
+    } catch {
+      return {};
+    }
   },
 };
 

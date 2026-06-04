@@ -1,13 +1,13 @@
 /* ================================================================
-   SharedLayout.css – Navbar, Footer, Logo (Google colors)
-   Blue #4285F4 · Red #EA4335 · Yellow #FBBC05 · Green #34A853
+   SharedLayout.css – Navbar, Footer, Logo (Subtle palette)
+   Muted tones for a premium, less colorful look
    ================================================================ */
 
-/* ===== GOOGLE COLOR CLASSES ===== */
-.g-blue   { color: #4285F4; }
-.g-red    { color: #EA4335; }
-.g-yellow { color: #FBBC05; }
-.g-green  { color: #34A853; }
+/* ===== SUBTLE LOGO COLOR CLASSES ===== */
+.g-blue   { color: #94a3b8; }
+.g-red    { color: #a78bfa; }
+.g-yellow { color: #c4b5fd; }
+.g-green  { color: #cbd5e1; }
 
 /* ===== LOGO ===== */
 .or-logo-link {
@@ -26,10 +26,10 @@
   display: inline-block;
   transition: text-shadow 0.3s, transform 0.3s;
 }
-.or-logo-link:hover .g-blue   { text-shadow: 0 0 14px rgba(66,133,244,0.6); }
-.or-logo-link:hover .g-red    { text-shadow: 0 0 14px rgba(234,67,53,0.6); }
-.or-logo-link:hover .g-yellow { text-shadow: 0 0 14px rgba(251,188,5,0.6); }
-.or-logo-link:hover .g-green  { text-shadow: 0 0 14px rgba(52,168,83,0.6); }
+.or-logo-link:hover .g-blue   { text-shadow: 0 0 12px rgba(148,163,184,0.4); }
+.or-logo-link:hover .g-red    { text-shadow: 0 0 12px rgba(167,139,250,0.4); }
+.or-logo-link:hover .g-yellow { text-shadow: 0 0 12px rgba(196,181,253,0.4); }
+.or-logo-link:hover .g-green  { text-shadow: 0 0 12px rgba(203,213,225,0.4); }
 
 .or-logo-sm  { font-size: clamp(1rem, 2vw, 1.2rem); }
 .or-logo-md  { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }

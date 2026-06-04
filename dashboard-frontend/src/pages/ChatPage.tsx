@@ -1152,7 +1152,7 @@ const ChatPage: React.FC = () => {
           
           <div className="sidebar-brand" onClick={() => navigate('/')}>
             <span className="brand-icon">←</span>
-            <span className="brand-text">OpenRouter</span>
+            <span className="brand-text">OrchSutra.ai</span>
           </div>
         </div>
 

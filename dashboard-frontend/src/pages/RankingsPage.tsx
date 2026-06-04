@@ -354,7 +354,7 @@ export default function RankingsPage() {
       <div className="rankings-page">
         <div className="rankings-header">
           <h1>AI Model Rankings</h1>
-          <p>Based on real usage data from millions of users accessing models through OpenRouter.</p>
+          <p>Based on real usage data from millions of users accessing models through OrchSutra.ai.</p>
         </div>
 
         <section className="ranking-card-section">
@@ -563,7 +563,7 @@ export default function RankingsPage() {
             </select>
           </div>
 
-          <p className="section-subtitle">Compare the most popular models on OpenRouter</p>
+          <p className="section-subtitle">Compare the most popular models on OrchSutra.ai</p>
 
           <table className="leaderboard-table">
             <thead>

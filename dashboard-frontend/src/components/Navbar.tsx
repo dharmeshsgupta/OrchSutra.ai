@@ -66,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ showAuthTabs, isSignUp, onSwitchMode })
           <Link to="/apps" className="navbar-link" onClick={() => setMenuOpen(false)}>Apps</Link>
           <a href="#enterprise" className="navbar-link" onClick={() => setMenuOpen(false)}>Enterprise</a>
           <Link to="/pricing" className="navbar-link" onClick={() => setMenuOpen(false)}>Pricing</Link>
-          <a href="https://docs.openrouter.ai" target="_blank" rel="noopener noreferrer" className="navbar-link" onClick={() => setMenuOpen(false)}>Docs</a>
+          <a href="https://docs.orchsutra.ai" target="_blank" rel="noopener noreferrer" className="navbar-link" onClick={() => setMenuOpen(false)}>Docs</a>
         </div>
 
         {/* Right section */}

@@ -140,7 +140,7 @@ const AppDetailPage: React.FC = () => {
             transition={{ duration: 0.45, delay: 0.15, ease: 'easeOut' }}
           >
             <div className="app-chart-head">
-              <h2>{data.name} OpenRouter Usage</h2>
+              <h2>{data.name} OrchSutra.ai Usage</h2>
               <span>Last 30 days</span>
             </div>
             <div className="app-chart-wrap">

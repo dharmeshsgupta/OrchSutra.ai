@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import (
-    Column, String, Integer, Float, Boolean, DateTime, Text, ForeignKey, JSON, Date, UniqueConstraint
+    Column, String, Integer, BigInteger, Float, Boolean, DateTime, Text, ForeignKey, JSON, Date, UniqueConstraint
 )
 from sqlalchemy.orm import relationship
 from src.db.config import Base
@@ -241,6 +241,27 @@ class RankingSnapshot(Base):
         UniqueConstraint("snapshot_date", "chart_key", "item_id", name="uq_snapshot_item"),
     )
     
+
+class ModelUsageStat(Base):
+    """
+    Weekly token usage snapshot per model.
+    One row = one model's total tokens for a given ISO week.
+    """
+    __tablename__ = "model_usage_stats"
+
+    id = Column(String, primary_key=True, default=_uuid)
+    model_id = Column(String, ForeignKey("models.id", ondelete="CASCADE"), nullable=False, index=True)
+    week_start = Column(Date, nullable=False, index=True)   # Monday of the ISO week
+    total_tokens = Column(BigInteger, default=0)             # total tokens processed this week
+    request_count = Column(Integer, default=0)               # number of API calls
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    model = relationship("Model")
+
+    __table_args__ = (
+        UniqueConstraint("model_id", "week_start", name="uq_model_week_stat"),
+    )
+
 
 class IngestionRun(Base):
     __tablename__ = "ingestion_runs"

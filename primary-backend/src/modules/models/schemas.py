@@ -18,10 +18,6 @@ class ModelDetail(BaseModel):
     company: CompanySchema
 
 
-class GetModelsResponseSchema(BaseModel):
-    models: List[ModelDetail]
-
-
 # Provider schema
 class ProviderSchema(BaseModel):
     id: str
@@ -103,6 +99,11 @@ class ModelResponse(ModelBase):
     
     class Config:
         from_attributes = True
+
+
+class GetModelsResponseSchema(BaseModel):
+    models: List[ModelResponse]
+
         
 class ParameterRange(BaseModel):
     """Defines min/max/default for a model parameter."""
@@ -231,3 +232,18 @@ class ModelDetailResponse(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+# ─────────── Model Usage Stats ───────────
+class ModelStatsResponse(BaseModel):
+    """Weekly token usage + trend for a single model."""
+    model_id: str
+    weekly_tokens: int           # raw token count for this week
+    weekly_tokens_label: str     # human-readable, e.g. "146.6B"
+    trend_percent: float         # % change vs previous week (0 if no prev data)
+    trend_label: str             # formatted, e.g. "+12%" or "-5%" or "0%"
+
+
+class AllModelStatsResponse(BaseModel):
+    """Bulk stats for all models — used by the homepage."""
+    stats: List[ModelStatsResponse]

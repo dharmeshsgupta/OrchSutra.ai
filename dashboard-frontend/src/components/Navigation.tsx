@@ -18,7 +18,7 @@ const Navigation: React.FC = () => {
       <div className="nav-container">
         <Link to="/" className="nav-logo">
           <span className="logo-icon">🚀</span>
-          OpenRouter
+          OrchSutra.ai
         </Link>
 
         <div className="nav-menu">

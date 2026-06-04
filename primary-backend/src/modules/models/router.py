@@ -12,6 +12,8 @@ from .schemas import (
     GetProvidersResponseSchema,
     GetModelProvidersResponseSchema,
     ModelResponse,
+    ModelStatsResponse,
+    AllModelStatsResponse,
 )
 from .service import ModelsService
 from src.db.config import get_db
@@ -47,11 +49,35 @@ async def get_providers(db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
+@router.get("/stats/all", response_model=AllModelStatsResponse)
+async def get_all_model_stats(db: AsyncSession = Depends(get_db)):
+    """Return weekly token stats + trend for all models."""
+    try:
+        stats = await ModelsService.get_all_model_stats(db)
+        return AllModelStatsResponse(stats=stats)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
 @router.get("/{model_id}/providers", response_model=GetModelProvidersResponseSchema)
 async def get_model_providers(model_id: str, db: AsyncSession = Depends(get_db)):
     try:
         providers = await ModelsService.get_model_providers(model_id, db)
         return GetModelProvidersResponseSchema(providers=providers)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@router.get("/{model_id}/stats", response_model=ModelStatsResponse)
+async def get_model_stats(model_id: str, db: AsyncSession = Depends(get_db)):
+    """Return weekly token count + trend for a single model."""
+    try:
+        stats = await ModelsService.get_model_stats(db, model_id)
+        if not stats:
+            raise HTTPException(status_code=404, detail="No stats found for this model")
+        return ModelStatsResponse(**stats)
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

@@ -128,7 +128,7 @@ const mockModels = [
 ];
 
 const marketShareProviders = [
-  { provider_id: 'openrouter', provider_name: 'OpenRouter', color: '#d4a017' },
+  { provider_id: 'OrchSutra.ai', provider_name: 'OrchSutra.ai', color: '#d4a017' },
   { provider_id: 'google', provider_name: 'Google', color: '#10b981' },
   { provider_id: 'anthropic', provider_name: 'Anthropic', color: '#1d82e6' },
   { provider_id: 'openai', provider_name: 'OpenAI', color: '#ff6b4a' },
@@ -373,7 +373,7 @@ const createDistributionWeeks = (
 const buildTopModelsChart = (): DistributionChartData => {
   return {
     title: 'Top Models',
-    subtitle: 'Weekly usage of models across OpenRouter',
+    subtitle: 'Weekly usage of models across OrchSutra.ai',
     metric: 'tokens',
     weeks: createDistributionWeeks([
       { id: 'others', name: 'Others', subtitle: 'by unknown', baseShare: 43, color: '#f062b0' },
@@ -393,7 +393,7 @@ const buildTopModelsChart = (): DistributionChartData => {
 const buildCategoriesChart = (): DistributionChartData => {
   return {
     title: 'Categories',
-    subtitle: 'Compare models by usecase on OpenRouter',
+    subtitle: 'Compare models by usecase on OrchSutra.ai',
     metric: 'tokens',
     weeks: createDistributionWeeks([
       { id: 'reasoning', name: 'Reasoning', subtitle: 'category', baseShare: 31, color: '#f062b0' },
@@ -413,7 +413,7 @@ const buildCategoriesChart = (): DistributionChartData => {
 const buildLanguagesChart = (): DistributionChartData => {
   return {
     title: 'Languages',
-    subtitle: 'Compare models by natural language on OpenRouter',
+    subtitle: 'Compare models by natural language on OrchSutra.ai',
     metric: 'tokens',
     weeks: createDistributionWeeks([
       { id: 'english', name: 'English', subtitle: 'language', baseShare: 41, color: '#f062b0' },
@@ -433,7 +433,7 @@ const buildLanguagesChart = (): DistributionChartData => {
 const buildProgrammingChart = (): DistributionChartData => {
   return {
     title: 'Programming',
-    subtitle: 'Compare models by programming language on OpenRouter',
+    subtitle: 'Compare models by programming language on OrchSutra.ai',
     metric: 'tokens',
     weeks: createDistributionWeeks([
       { id: 'python', name: 'Python', subtitle: 'programming', baseShare: 46, color: '#f062b0' },
@@ -453,7 +453,7 @@ const buildProgrammingChart = (): DistributionChartData => {
 const buildToolCallsChart = (): DistributionChartData => {
   return {
     title: 'Tool Calls',
-    subtitle: 'Tool usage across models on OpenRouter',
+    subtitle: 'Tool usage across models on OrchSutra.ai',
     metric: 'calls',
     weeks: createDistributionWeeks([
       { id: 'minimax-m2-5', name: 'MiniMax M2.5', subtitle: 'by minimax', baseShare: 13.4, color: '#08b9a7' },
@@ -473,7 +473,7 @@ const buildToolCallsChart = (): DistributionChartData => {
 const buildImagesChart = (): DistributionChartData => {
   return {
     title: 'Images',
-    subtitle: 'Total images processed on OpenRouter',
+    subtitle: 'Total images processed on OrchSutra.ai',
     metric: 'images',
     weeks: createDistributionWeeks([
       { id: 'gemini-2-5-flash-lite', name: 'Gemini 2.5 Flash Lite', subtitle: 'by google', baseShare: 37.1, color: '#1d82e6' },

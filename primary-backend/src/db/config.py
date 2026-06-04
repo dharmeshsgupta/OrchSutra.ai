@@ -47,5 +47,6 @@ async def init_db():
             ChatRequestLog,
             TTSAgentProfile,
             TTSAgentMessage,
+            ModelUsageStat,
         )
         await conn.run_sync(Base.metadata.create_all)

@@ -265,7 +265,7 @@
 /* Features Grid - OpenRouter 4 feature cards */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 2rem;
   margin-bottom: 7rem;
   width: 100%;
@@ -377,6 +377,18 @@
 }
 
 /* Featured Section */
+.feature-card.col-span-2 {
+  grid-column: span 2;
+}
+
+.feature-card.col-span-3 {
+  grid-column: span 3;
+}
+
+.feature-card.col-span-4 {
+  grid-column: span 4;
+}
+
 .featured-section {
   width: 100%;
 }

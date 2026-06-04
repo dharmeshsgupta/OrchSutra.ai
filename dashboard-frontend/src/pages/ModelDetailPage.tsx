@@ -306,7 +306,7 @@ const ModelDetailPage: React.FC = () => {
       
       <div className="detail-container">
         
-        {/* ========== HEADER SECTION (Like OpenRouter) ========== */}
+        {/* ========== HEADER SECTION (Like OrchSutra.ai) ========== */}
         <div className="model-header-section">
           <div className="header-top">
             <div className="header-left">
@@ -422,7 +422,7 @@ const ModelDetailPage: React.FC = () => {
             <div className="providers-full-section">
               <h2>Providers for {model.name}</h2>
               <p className="section-desc">
-                OpenRouter <a href="#">routes requests</a> to the best providers that are able to handle your prompt size and parameters, with fallbacks to maximize <a href="#">uptime</a>.
+                OrchSutra.ai <a href="#">routes requests</a> to the best providers that are able to handle your prompt size and parameters, with fallbacks to maximize <a href="#">uptime</a>.
               </p>
               
               <div className="providers-table">
@@ -499,7 +499,7 @@ const ModelDetailPage: React.FC = () => {
             <div className="performance-section">
               <div className="performance-header">
                 <h2>Performance for {model.name}</h2>
-                <p>Compare different providers across OpenRouter</p>
+                <p>Compare different providers across OrchSutra.ai</p>
                 <select className="location-select">
                   <option>All locations</option>
                   <option>US East</option>
@@ -866,7 +866,7 @@ const ProvidersSection: React.FC<{ providers: ProviderStats[]; modelName: string
   <div className="providers-overview">
     <h2>Providers for {modelName}</h2>
     <p className="section-desc">
-      OpenRouter <a href="#">routes requests</a> to the best providers that are able to handle your prompt size and parameters, with fallbacks to maximize <a href="#">uptime</a>. <span className="info-icon">ⓘ</span>
+      OrchSutra.ai <a href="#">routes requests</a> to the best providers that are able to handle your prompt size and parameters, with fallbacks to maximize <a href="#">uptime</a>. <span className="info-icon">ⓘ</span>
     </p>
     
     <div className="providers-table">
@@ -1270,8 +1270,8 @@ const QuickstartSection: React.FC<{
     python: `from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key="<OPENROUTER_API_KEY>",
+    base_url="https://orchsutra.ai/api/v1",
+    api_key="<ORCHSUTRA_API_KEY>",
 )
 
 completion = client.chat.completions.create(
@@ -1294,8 +1294,8 @@ print(completion.choices[0].message.content)`,
     typescript: `import OpenAI from "openai";
 
 const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: "<OPENROUTER_API_KEY>",
+  baseURL: "https://orchsutra.ai/api/v1",
+  apiKey: "<ORCHSUTRA_API_KEY>",
 });
 
 async function main() {
@@ -1314,9 +1314,9 @@ async function main() {
 
 main();`,
 
-    curl: `curl https://openrouter.ai/api/v1/chat/completions \\
+    curl: `curl https://orchsutra.ai/api/v1/chat/completions \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer <OPENROUTER_API_KEY>" \\
+  -H "Authorization: Bearer <ORCHSUTRA_API_KEY>" \\
   -d '{
     "model": "${modelSlug}",
     "messages": [
@@ -1365,7 +1365,7 @@ main();`,
         <div className="api-details">
           <div className="api-row">
             <span className="api-label">Endpoint</span>
-            <code>https://openrouter.ai/api/v1/chat/completions</code>
+            <code>https://orchsutra.ai/api/v1/chat/completions</code>
           </div>
           <div className="api-row">
             <span className="api-label">Model ID</span>
@@ -1373,7 +1373,7 @@ main();`,
           </div>
           <div className="api-row">
             <span className="api-label">Authentication</span>
-            <code>Bearer &lt;OPENROUTER_API_KEY&gt;</code>
+            <code>Bearer &lt;ORCHSUTRA_API_KEY&gt;</code>
           </div>
         </div>
       </div>

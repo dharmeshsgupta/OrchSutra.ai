@@ -55,7 +55,7 @@ const AppsPage: React.FC = () => {
           <section className="apps-section">
             <div className="apps-section-title-row">
               <h2>Most Popular</h2>
-              <a href="https://openrouter.ai/apps" target="_blank" rel="noreferrer">View more</a>
+              <a href="https://orchsutra.ai/apps" target="_blank" rel="noreferrer">View more</a>
             </div>
             <div className="apps-card-grid">
               {overview.mostPopular.map((app, index) => (
@@ -99,7 +99,7 @@ const AppsPage: React.FC = () => {
             <article className="apps-list-card">
               <div className="apps-list-head">
                 <h3>Top Coding Agents</h3>
-                <a href="https://openrouter.ai/apps" target="_blank" rel="noreferrer">View all</a>
+                <a href="https://orchsutra.ai/apps" target="_blank" rel="noreferrer">View all</a>
               </div>
               {overview.topCodingAgents.map((item, index) => (
                 <div key={item.name} className="apps-list-row">
@@ -117,7 +117,7 @@ const AppsPage: React.FC = () => {
             <article className="apps-list-card">
               <div className="apps-list-head">
                 <h3>Top Productivity</h3>
-                <a href="https://openrouter.ai/apps" target="_blank" rel="noreferrer">View all</a>
+                <a href="https://orchsutra.ai/apps" target="_blank" rel="noreferrer">View all</a>
               </div>
               {overview.topProductivity.map((item, index) => (
                 <div key={item.name} className="apps-list-row">
@@ -137,7 +137,7 @@ const AppsPage: React.FC = () => {
             <article className="apps-list-card">
               <div className="apps-list-head">
                 <h3>Top Creative</h3>
-                <a href="https://openrouter.ai/apps" target="_blank" rel="noreferrer">View all</a>
+                <a href="https://orchsutra.ai/apps" target="_blank" rel="noreferrer">View all</a>
               </div>
               {overview.topCreative.map((item, index) => (
                 <div key={item.id} className="apps-list-row">
@@ -155,7 +155,7 @@ const AppsPage: React.FC = () => {
             <article className="apps-list-card">
               <div className="apps-list-head">
                 <h3>Top Entertainment</h3>
-                <a href="https://openrouter.ai/apps" target="_blank" rel="noreferrer">View all</a>
+                <a href="https://orchsutra.ai/apps" target="_blank" rel="noreferrer">View all</a>
               </div>
               {overview.topEntertainment.map((item, index) => (
                 <div key={item.id} className="apps-list-row">

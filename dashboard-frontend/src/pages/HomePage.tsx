@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { ScrollAnimation } from '../components/home/ScrollAnimation';
 import ThreeBackground from '../components/home/ThreeBackground';
 import ParticleBackground from '../components/home/ParticleBackground';
 import { ModelsService } from '../services/modelsService';
@@ -214,7 +215,7 @@ const HomePage: React.FC = () => {
             variants={fadeUpVariant}
           >
             {/* Feature 1: One API for Any Model */}
-            <motion.div className="feature-card" variants={cardVariant}>
+            <motion.div className="feature-card col-span-2" variants={cardVariant}>
               <div className="feature-illustration">
                 <svg width="140" height="90" viewBox="0 0 140 90" fill="none">
                   {/* Central hub */}
@@ -241,8 +242,11 @@ const HomePage: React.FC = () => {
               <a href="/models" onClick={(e) => { e.preventDefault(); navigate('/models'); }}>Browse all ↗</a>
             </motion.div>
 
+            {/* Scroll Animation Frame Viewer */}
+            <ScrollAnimation />
+
             {/* Feature 2: Higher Availability */}
-            <motion.div className="feature-card" variants={cardVariant}>
+            <motion.div className="feature-card col-span-2" variants={cardVariant}>
               <div className="feature-illustration">
                 <svg width="140" height="90" viewBox="0 0 140 90" fill="none">
                   {/* Server nodes */}
@@ -266,7 +270,7 @@ const HomePage: React.FC = () => {
             </motion.div>
 
             {/* Feature 3: Price and Performance */}
-            <motion.div className="feature-card" variants={cardVariant}>
+            <motion.div className="feature-card col-span-3" variants={cardVariant}>
               <div className="feature-illustration">
                 <svg width="140" height="90" viewBox="0 0 140 90" fill="none">
                   {/* Chart background */}
@@ -303,7 +307,7 @@ const HomePage: React.FC = () => {
             </motion.div>
 
             {/* Feature 4: Custom Data Policies */}
-            <motion.div className="feature-card" variants={cardVariant}>
+            <motion.div className="feature-card col-span-3" variants={cardVariant}>
               <div className="feature-illustration">
                 <svg width="140" height="90" viewBox="0 0 140 90" fill="none">
                   {/* Shield outline */}
