@@ -109,7 +109,11 @@ app.add_middleware(
         "http://127.0.0.1:5175",
         "http://127.0.0.1:5176",
         "http://127.0.0.1:5177",
+        # ── Deployed Vercel URLs ──
+        "https://orchsutra-ai.vercel.app",
+        "https://dashboard-frontend-eta-ruddy.vercel.app",
     ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
