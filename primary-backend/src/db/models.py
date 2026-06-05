@@ -25,6 +25,7 @@ class User(Base):
     display_name = Column(String, nullable=True)
     photo_url = Column(String, nullable=True)
     provider = Column(String, nullable=True)          # "email", "google.com", "phone"
+    is_admin = Column(Boolean, default=False)
     credits = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

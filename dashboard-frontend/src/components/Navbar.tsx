@@ -14,7 +14,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ showAuthTabs, isSignUp, onSwitchMode }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
 
@@ -94,6 +94,15 @@ const Navbar: React.FC<NavbarProps> = ({ showAuthTabs, isSignUp, onSwitchMode })
               >
                 Dashboard
               </Link>
+              {user?.isAdmin && (
+                <Link
+                  to="/admin"
+                  className={`navbar-cta navbar-cta-dashboard ${isActive('/admin') ? 'navbar-cta-dashboard-active' : ''}`}
+                  style={{ background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1))', borderColor: 'rgba(245, 158, 11, 0.3)' }}
+                >
+                  Admin Panel
+                </Link>
+              )}
               <button className="navbar-cta navbar-cta-logout" onClick={handleLogout}>
                 Logout
               </button>

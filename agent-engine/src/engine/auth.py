@@ -23,8 +23,13 @@ def init_firebase():
     # Look for the absolute path in .env, or fallback to the known path in primary-backend
     key_path = os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY")
     if not key_path:
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-        key_path = os.path.join(base_dir, "primary-backend", "openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json")
+        # Fallback for local run
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        key_path = os.path.join(base_dir, "openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json")
+    
+    # If still not found, try the exact filename in current working directory
+    if not os.path.exists(key_path):
+        key_path = "./openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json"
 
     try:
         if key_path.strip().startswith("{"):

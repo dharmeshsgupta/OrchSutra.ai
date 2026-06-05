@@ -1,0 +1,181 @@
+# ═══════════════════════════════════════════════════════════════
+#  docker-compose.yml  — OrchSutra.ai
+#
+#  HOW ENV VARS WORK HERE:
+#  docker-compose automatically reads the ROOT .env file.
+#  We then inject ONLY the needed vars into each service
+#  using the "environment:" block with ${VAR_NAME} syntax.
+#  This means: no secrets are baked into images anymore!
+# ═══════════════════════════════════════════════════════════════
+
+networks:
+  orchsutra_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  chromadb_data:
+
+services:
+
+  # ────────────────────────────────────────────
+  #  1. PostgreSQL Database
+  # ────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: orchsutra_postgres
+    restart: unless-stopped
+    environment:
+      # These come from root .env automatically
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - orchsutra_net
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ────────────────────────────────────────────
+  #  2. API Routing Backend (port 3000)
+  # ────────────────────────────────────────────
+  api-backend:
+    build:
+      context: ./api-backend
+    container_name: orchsutra_api_backend
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      # LLM Provider Keys
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_BASE=${OPENAI_API_BASE}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ANTHROPIC_API_BASE=${ANTHROPIC_API_BASE}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - SARVAM_API_KEY=${SARVAM_API_KEY}
+      - SARVAM_API_BASE=${SARVAM_API_BASE}
+      # Internal
+      - API_BACKEND_TOKEN=${API_BACKEND_TOKEN}
+    networks:
+      - orchsutra_net
+    ports:
+      - "3000:3000"
+
+  # ────────────────────────────────────────────
+  #  3. Primary Backend (port 3001)
+  # ────────────────────────────────────────────
+  primary-backend:
+    build:
+      context: ./primary-backend
+    container_name: orchsutra_primary_backend
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Database — points to postgres SERVICE (not localhost!)
+      - DATABASE_URL=${DATABASE_URL}
+      # Firebase
+      - FIREBASE_SERVICE_ACCOUNT_KEY=${FIREBASE_SERVICE_ACCOUNT_KEY}
+      # JWT
+      - JWT_SECRET=${JWT_SECRET}
+      # LLM Keys (used for media + chat routing)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - SARVAM_API_KEY=${SARVAM_API_KEY}
+      - SARVAM_API_BASE=${SARVAM_API_BASE}
+      # Media
+      - MEDIA_IMAGE_API_KEY=${MEDIA_IMAGE_API_KEY}
+      - MEDIA_IMAGE_API_BASE=${MEDIA_IMAGE_API_BASE}
+      - MEDIA_IMAGE_MODEL=${MEDIA_IMAGE_MODEL}
+      - MEDIA_VISION_MODEL=${MEDIA_VISION_MODEL}
+      - MEDIA_IMAGE_FALLBACK_API_KEY=${MEDIA_IMAGE_FALLBACK_API_KEY}
+      - MEDIA_IMAGE_FALLBACK_API_BASE=${MEDIA_IMAGE_FALLBACK_API_BASE}
+      - MEDIA_IMAGE_FALLBACK_MODEL=${MEDIA_IMAGE_FALLBACK_MODEL}
+      - MEDIA_VISION_FALLBACK_MODEL=${MEDIA_VISION_FALLBACK_MODEL}
+      - MEDIA_AUDIO_API_KEY=${MEDIA_AUDIO_API_KEY}
+      - MEDIA_AUDIO_API_BASE=${MEDIA_AUDIO_API_BASE}
+      - MEDIA_AUDIO_MODEL=${MEDIA_AUDIO_MODEL}
+      - MEDIA_AUDIO_FILES_DIR=${MEDIA_AUDIO_FILES_DIR}
+      # NVIDIA TTS
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - NVIDIA_MAGPIE_FUNCTION_ID=${NVIDIA_MAGPIE_FUNCTION_ID}
+      - NVIDIA_MAGPIE_URI=${NVIDIA_MAGPIE_URI}
+      # Chat defaults
+      - CHAT_DEFAULT_MODEL_ID=${CHAT_DEFAULT_MODEL_ID}
+      - CHAT_MODEL_OPTIONS=${CHAT_MODEL_OPTIONS}
+      # Internal APIs
+      - API_BACKEND_URL=${API_BACKEND_URL}
+      - API_BACKEND_TOKEN=${API_BACKEND_TOKEN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - orchsutra_net
+    ports:
+      - "3001:3001"
+
+  # ────────────────────────────────────────────
+  #  4. Agent Engine (port 3002)
+  # ────────────────────────────────────────────
+  agent-engine:
+    build:
+      context: ./agent-engine
+    container_name: orchsutra_agent_engine
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Points to api-backend service (NOT localhost)
+      - LLM_ROUTER_BASE_URL=${LLM_ROUTER_BASE_URL}
+      - ROUTER_CHAT_PATH=${ROUTER_CHAT_PATH}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - ENGINE_MEMORY_DB_PATH=${ENGINE_MEMORY_DB_PATH}
+      - ENGINE_VECTORSTORE_PATH=${ENGINE_VECTORSTORE_PATH}
+      # Keys the agent engine needs directly
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    volumes:
+      - chromadb_data:/app/.engine
+    networks:
+      - orchsutra_net
+    ports:
+      - "3002:3002"
+
+  # ────────────────────────────────────────────
+  #  5. Frontend — React + Nginx (port 80)
+  # ────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./dashboard-frontend
+      # Pass VITE_ vars as build args so Vite can embed them at build time
+      # (React/Vite env vars are baked into the JS bundle during build)
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+        - VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY}
+        - VITE_FIREBASE_AUTH_DOMAIN=${VITE_FIREBASE_AUTH_DOMAIN}
+        - VITE_FIREBASE_PROJECT_ID=${VITE_FIREBASE_PROJECT_ID}
+        - VITE_FIREBASE_STORAGE_BUCKET=${VITE_FIREBASE_STORAGE_BUCKET}
+        - VITE_FIREBASE_MESSAGING_SENDER_ID=${VITE_FIREBASE_MESSAGING_SENDER_ID}
+        - VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}
+        - VITE_FIREBASE_MEASUREMENT_ID=${VITE_FIREBASE_MEASUREMENT_ID}
+    container_name: orchsutra_frontend
+    restart: unless-stopped
+    depends_on:
+      - api-backend
+      - primary-backend
+      - agent-engine
+    networks:
+      - orchsutra_net
+    ports:
+      - "80:80"

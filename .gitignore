@@ -15,15 +15,12 @@ __pycache__/
 # Node
 **/node_modules/
 
-# Env and secrets
+# Env and secrets — NEVER commit these!
 .env
 **/.env
-.env.*
-**/.env.*
-.env.example
-**/.env.example
-.env.sample
-**/.env.sample
+# Allow .env.example (safe templates with no real secrets)
+!.env.example
+!**/.env.example
 *.pem
 *.key
 *.p12

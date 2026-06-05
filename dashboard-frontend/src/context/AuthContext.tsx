@@ -10,6 +10,7 @@ interface User {
   displayName: string | null;
   photoURL: string | null;
   phoneNumber: string | null;
+  isAdmin: boolean;
 }
 
 interface AuthContextType {
@@ -39,12 +40,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           displayName: fbUser.displayName,
           photoURL: fbUser.photoURL,
           phoneNumber: fbUser.phoneNumber,
+          isAdmin: false, // Default until profile is fetched
         });
 
         // Notify backend on every auth state change so user is upserted in DB
         try {
           const idToken = await fbUser.getIdToken();
-          await fetch(
+          const response = await fetch(
             `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/auth/verify-token`,
             {
               method: 'POST',
@@ -53,6 +55,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               body: JSON.stringify({ id_token: idToken }),
             },
           );
+          
+          if (response.ok) {
+            const data = await response.json();
+            setUser(prev => prev ? { ...prev, isAdmin: data.is_admin || false } : null);
+          }
         } catch (err) {
           console.error('Backend verify-token failed:', err);
         }

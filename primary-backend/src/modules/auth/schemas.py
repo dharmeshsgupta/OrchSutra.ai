@@ -17,6 +17,7 @@ class UserResponse(BaseModel):
     display_name: Optional[str] = None
     photo_url: Optional[str] = None
     provider: Optional[str] = None
+    is_admin: bool = False
     credits: float = 0
     created_at: Optional[datetime] = None
 
@@ -32,6 +33,7 @@ class ProfileResponse(BaseModel):
     photo_url: Optional[str] = None
     credits: float = 0
     provider: Optional[str] = None
+    is_admin: bool = False
 
     class Config:
         from_attributes = True

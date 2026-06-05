@@ -44,6 +44,7 @@ async def verify_token(
             display_name=user.display_name,
             photo_url=user.photo_url,
             provider=user.provider,
+            is_admin=user.is_admin,
             credits=user.credits,
             created_at=user.created_at,
         )
@@ -63,6 +64,7 @@ async def profile(user: User = Depends(get_current_user)):
         photo_url=user.photo_url,
         credits=user.credits,
         provider=user.provider,
+        is_admin=user.is_admin,
     )
 
 

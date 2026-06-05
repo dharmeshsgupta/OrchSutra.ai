@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
+  LineChart,
+  Line,
   BarChart,
   Bar,
   ScatterChart,
@@ -10,6 +12,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from 'recharts';
 import type { ReactNode } from 'react';
 import { rankingsService } from '../services/rankingsService';
@@ -254,45 +257,48 @@ export default function RankingsPage() {
     }
   };
 
-  const oldTopModelsChartData = useMemo(() => {
-    if (!data?.top_models_chart?.weeks) return [];
-
-    const recentWeeks = data.top_models_chart.weeks.slice(-10);
-    return recentWeeks.map((week) => {
-      const point: Record<string, unknown> = {
-        week: week.week_start.split(' ').slice(0, 2).join(' '),
-      };
-
-      week.models.forEach((model) => {
-        point[model.model_name] = model.tokens;
+  // ── Top Models Line Chart (uses DB data via top_models.weeks) ──────────────
+  // LESSON: The old chart used top_models_chart (legacy mock format with .models[]
+  // that always showed Jan-Feb 2026). We now use top_models.weeks (DistributionWeek[]
+  // with .items[] which comes from real DB backfill data — shows April-June 2026!)
+  const topModelsLineData = useMemo(() => {
+    if (!data?.top_models?.weeks?.length) return [];
+    // Take last 20 weeks (daily snapshots grouped as needed)
+    const recent = data.top_models.weeks.slice(-20);
+    return recent.map((week) => {
+      // Format date label: "04 Jun" from "04 Jun 2026"
+      const label = week.week_start.split(' ').slice(0, 2).join(' ');
+      const point: Record<string, unknown> = { date: label };
+      week.items.forEach((item) => {
+        // Use share_percent so all models are visible on same scale
+        point[item.item_name] = Number(item.share_percent.toFixed(1));
       });
-
       return point;
     });
   }, [data]);
 
-  const oldTopModelBars = useMemo(() => {
-    const latestWeek = data?.top_models_chart?.weeks?.at(-1);
-    if (!latestWeek?.models) return [];
-    return latestWeek.models.map((model) => ({
-      name: model.model_name,
-      color: model.color,
-    }));
+  // Top 5 models (exclude 'Others') from the latest snapshot
+  const topModelLines = useMemo(() => {
+    const latestWeek = data?.top_models?.weeks?.at(-1);
+    if (!latestWeek) return [];
+    return [...latestWeek.items]
+      .filter((item) => item.item_name !== 'Others')
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5)
+      .map((item) => ({ name: item.item_name, color: item.color }));
   }, [data]);
 
+  // ── Market Share Bar Chart ──────────────────────────────────────────────────
   const marketShareChartData = useMemo(() => {
     if (!data?.market_share?.weeks) return [];
-
     const recentWeeks = data.market_share.weeks.slice(-10);
     return recentWeeks.map((week) => {
       const point: Record<string, unknown> = {
         week: week.week_start.split(' ').slice(0, 2).join(' '),
       };
-
       week.providers.forEach((provider) => {
         point[provider.provider_name] = provider.share_percent;
       });
-
       return point;
     });
   }, [data]);
@@ -357,30 +363,88 @@ export default function RankingsPage() {
           <p>Based on real usage data from millions of users accessing models through OrchSutra.ai.</p>
         </div>
 
+        {/* ── Top Models Line Chart ── */}
         <section className="ranking-card-section">
           <div className="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 20V10M12 20V4M6 20v-6" />
+              <path d="M3 3v18h18M7 16l4-4 4 4 4-5" />
             </svg>
-            <h2>Top Models (Legacy)</h2>
+            <h2>Top Models</h2>
           </div>
-          <p className="section-subtitle">Weekly usage chart (previous top models graph)</p>
+          <p className="section-subtitle">
+            Daily market share % of top 5 models — hover a line to see the model name and value
+          </p>
 
           <div className="chart-container chart-container-medium">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={oldTopModelsChartData} margin={{ top: 20, right: 16, left: 8, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="week" tick={{ fontSize: 12 }} tickLine={false} axisLine={{ stroke: '#e5e7eb' }} />
-                <YAxis tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
-                <Tooltip />
-                {oldTopModelBars.map((bar) => (
-                  <Bar key={bar.name} dataKey={bar.name} stackId="a" fill={bar.color} radius={[0, 0, 0, 0]} />
+              <LineChart
+                data={topModelsLineData}
+                margin={{ top: 10, right: 24, left: 0, bottom: 4 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={{ stroke: '#e5e7eb' }}
+                  interval={Math.max(0, Math.floor(topModelsLineData.length / 8) - 1)}
+                />
+                <YAxis
+                  tickFormatter={(v) => `${v}%`}
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={false}
+                  domain={[0, 'dataMax + 5']}
+                />
+                <Tooltip
+                  formatter={(value: any, name: any) => [`${value}%`, name]}
+                  contentStyle={{ borderRadius: 8, fontSize: 13 }}
+                />
+                <Legend
+                  wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
+                  formatter={(value) => (
+                    <span style={{ color: '#374151', fontWeight: 500 }}>{value}</span>
+                  )}
+                />
+                {topModelLines.map((line) => (
+                  <Line
+                    key={line.name}
+                    type="monotone"
+                    dataKey={line.name}
+                    stroke={line.color}
+                    strokeWidth={2.5}
+                    dot={false}
+                    activeDot={{ r: 5 }}
+                  />
                 ))}
-              </BarChart>
+              </LineChart>
             </ResponsiveContainer>
+          </div>
+
+          {/* Ranked list below the chart */}
+          <div className="rank-list two-column" style={{ marginTop: '1rem' }}>
+            {data?.top_models?.weeks?.at(-1)?.items
+              .filter((i) => i.item_name !== 'Others')
+              .sort((a, b) => b.value - a.value)
+              .slice(0, 10)
+              .map((item, idx) => (
+                <div key={item.item_id} className="rank-row detailed-row">
+                  <span className="rank-index">{idx + 1}.</span>
+                  <span className="rank-dot" style={{ backgroundColor: item.color }} />
+                  <div className="rank-main-text">
+                    <span className="rank-name">{item.item_name}</span>
+                    <span className="rank-sub">{item.subtitle}</span>
+                  </div>
+                  <div className="rank-value-group">
+                    <span className="rank-value">{formatCompact(item.value)}</span>
+                    <span className="rank-percent">{item.share_percent.toFixed(1)}%</span>
+                  </div>
+                </div>
+              ))}
           </div>
         </section>
 
+        {/* ── Market Share Bar Chart ── */}
         <section className="ranking-card-section">
           <div className="section-header">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -388,17 +452,41 @@ export default function RankingsPage() {
             </svg>
             <h2>Market Share</h2>
           </div>
-          <p className="section-subtitle">Compare token share by provider over time</p>
+          <p className="section-subtitle">Token share by provider over time — hover a bar to see provider breakdown</p>
 
           <div className="chart-container chart-container-medium">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={marketShareChartData} margin={{ top: 20, right: 16, left: 8, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="week" tick={{ fontSize: 12 }} tickLine={false} axisLine={{ stroke: '#e5e7eb' }} />
-                <YAxis tickFormatter={(value) => `${value}%`} domain={[0, 100]} tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+              <BarChart data={marketShareChartData} margin={{ top: 10, right: 24, left: 0, bottom: 4 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <XAxis
+                  dataKey="week"
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={{ stroke: '#e5e7eb' }}
+                  interval={Math.max(0, Math.floor(marketShareChartData.length / 8) - 1)}
+                />
+                <YAxis
+                  tickFormatter={(v) => `${v}%`}
+                  domain={[0, 100]}
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={false}
+                />
                 <Tooltip content={<SectionTooltip metric="tokens" />} />
+                <Legend
+                  wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
+                  formatter={(value) => (
+                    <span style={{ color: '#374151', fontWeight: 500 }}>{value}</span>
+                  )}
+                />
                 {marketShareBars.map((bar) => (
-                  <Bar key={bar.name} dataKey={bar.name} stackId="a" fill={bar.color} radius={[0, 0, 0, 0]} />
+                  <Bar
+                    key={bar.name}
+                    dataKey={bar.name}
+                    stackId="a"
+                    fill={bar.color}
+                    radius={[0, 0, 0, 0]}
+                  />
                 ))}
               </BarChart>
             </ResponsiveContainer>

@@ -1,1 +1,10 @@
+# ── Core API ──
+# LESSON: This is what was missing! The api-backend requirements.txt
+# only had "python-dotenv" — so uvicorn, fastapi, pydantic were not installed.
+# That's why Docker logs showed: "No module named uvicorn"
+fastapi
+uvicorn[standard]
+httpx
+pydantic
+pydantic-settings
 python-dotenv
