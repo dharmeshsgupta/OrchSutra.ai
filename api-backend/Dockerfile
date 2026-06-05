@@ -32,7 +32,7 @@ COPY src/ ./src/
 # STEP 6 ── Copy the .env file (API keys, settings)
 #   NOTE: In production you should use Docker secrets or
 #   environment variables instead of copying .env files.
-COPY .env .
+
 
 # STEP 7 ── Tell Docker which port this service listens on
 #   This is just documentation — it doesn't open the port by itself.

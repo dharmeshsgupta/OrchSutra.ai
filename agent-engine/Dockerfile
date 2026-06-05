@@ -56,8 +56,7 @@ RUN pip install --no-cache-dir \
 
 # Copy source code and config
 COPY src/ ./src/
-COPY .env .
-COPY openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json .
+
 
 EXPOSE 3002
 

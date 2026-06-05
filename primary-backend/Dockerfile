@@ -27,11 +27,7 @@ RUN pip install --no-cache-dir --timeout=300 --retries=5 -r requirements.txt
 
 # Copy source code and config files
 COPY src/ ./src/
-COPY .env .
 
-# Firebase service account key (needed by firebase-admin SDK)
-# IMPORTANT: In production, mount this as a Docker secret instead!
-COPY openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json .
 
 EXPOSE 3001
 
