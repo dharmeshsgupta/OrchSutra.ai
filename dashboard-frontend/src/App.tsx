@@ -68,6 +68,14 @@ const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 // Login Page Component
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   const [isSignUp, setIsSignUp] = React.useState(false);
   const [isTransitioning, setIsTransitioning] = React.useState(false);
   const [slideDirection, setSlideDirection] = React.useState<'left' | 'right'>('left');
