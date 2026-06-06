@@ -92,7 +92,9 @@ export const MediaService = {
   },
 
   listTTSAgents: async (): Promise<TTSAgentProfile[]> => {
-    const response = await apiClient.get('/media/tts/agents');
+    const response = await apiClient.get('/media/tts/agents', {
+      skipAuthRedirect: true,
+    } as any);
     return response.data;
   },
 

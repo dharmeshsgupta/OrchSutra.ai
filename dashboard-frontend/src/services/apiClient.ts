@@ -33,8 +33,11 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized - redirect to login
-      window.location.href = '/login';
+      const config = error.config as any;
+      if (!config?.skipAuthRedirect) {
+        // Handle unauthorized - redirect to login
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
