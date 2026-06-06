@@ -80,14 +80,16 @@ export const MediaService = {
   generateImage: async (payload: GenerateImageRequest): Promise<GenerateImageResponse> => {
     const response = await apiClient.post('/media/image/generate', payload, {
       timeout: 120000,
-    });
+      skipAuthRedirect: true,
+    } as any);
     return response.data;
   },
 
   generateAudio: async (payload: GenerateAudioRequest): Promise<GenerateAudioResponse> => {
     const response = await apiClient.post('/media/audio/generate', payload, {
       timeout: 120000,
-    });
+      skipAuthRedirect: true,
+    } as any);
     return response.data;
   },
 
@@ -99,21 +101,25 @@ export const MediaService = {
   },
 
   createTTSAgent: async (payload: CreateTTSAgentRequest): Promise<TTSAgentProfile> => {
-    const response = await apiClient.post('/media/tts/agents', payload);
+    const response = await apiClient.post('/media/tts/agents', payload, {
+      skipAuthRedirect: true,
+    } as any);
     return response.data;
   },
 
   generateFromTTSAgent: async (payload: GenerateTTSFromAgentRequest): Promise<GenerateTTSFromAgentResponse> => {
     const response = await apiClient.post('/media/tts/generate', payload, {
       timeout: 120000,
-    });
+      skipAuthRedirect: true,
+    } as any);
     return response.data;
   },
 
   analyzeImage: async (payload: AnalyzeImageRequest): Promise<AnalyzeImageResponse> => {
     const response = await apiClient.post('/media/image/analyze', payload, {
       timeout: 120000,
-    });
+      skipAuthRedirect: true,
+    } as any);
     return response.data;
   },
 };
