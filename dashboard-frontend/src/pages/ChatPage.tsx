@@ -435,7 +435,7 @@ const classifyMediaError = (err: any, operation: 'generate' | 'analyze'): string
   const providerDetail = extractProviderDetail(detail) || err?.message || 'Unknown error';
   const lowered = providerDetail.toLowerCase();
 
-  if (status === 401 && !lowered.includes('provider error') && !lowered.includes('incorrect api key')) {
+  if (status === 401 && !lowered.includes('provider error') && !lowered.includes('incorrect api key') && !lowered.includes('provide an api key')) {
     return 'You are not authenticated. Please log in again and retry.';
   }
 
@@ -479,7 +479,7 @@ const classifyAudioError = (err: any): string => {
   const providerDetail = extractProviderDetail(detail) || err?.message || 'Unknown error';
   const lowered = providerDetail.toLowerCase();
 
-  if (status === 401 && !lowered.includes('provider error') && !lowered.includes('incorrect api key')) {
+  if (status === 401 && !lowered.includes('provider error') && !lowered.includes('incorrect api key') && !lowered.includes('provide an api key')) {
     return 'You are not authenticated. Please log in again and retry.';
   }
   if (lowered.includes('audio provider key not configured') || lowered.includes('media_audio_api_key')) {

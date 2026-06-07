@@ -53,8 +53,10 @@ class MediaService:
         load_dotenv(dotenv_path=env_path, override=False)
 
     @staticmethod
-    def _resolve_image_key() -> str:
+    def _resolve_image_key(use_nvidia: bool = False) -> str:
         MediaService._reload_env()
+        if use_nvidia and os.getenv("NVIDIA_API_KEY"):
+            return os.getenv("NVIDIA_API_KEY", "").strip()
         return (
             os.getenv("MEDIA_IMAGE_API_KEY")
             or MediaService.IMAGE_API_KEY
@@ -149,15 +151,17 @@ class MediaService:
         fallback_model: str,
         payload: ImageGenerateRequestSchema,
     ) -> tuple[httpx.Response, str, str]:
-        primary_key = MediaService._resolve_image_key()
+        primary_key = MediaService._resolve_image_key(use_nvidia=True)
         if not primary_key:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Image provider key not configured. Set MEDIA_IMAGE_API_KEY or OPENAI_API_KEY.",
+                detail="NVIDIA API key not configured. Set NVIDIA_API_KEY or MEDIA_IMAGE_API_KEY.",
             )
 
         primary_base = MediaService._resolve_image_base().rstrip("/")
-        if "integrate.api.nvidia.com" in primary_base:
+        if not MediaService._is_nvidia_image_base(primary_base):
+            primary_base = "https://ai.api.nvidia.com/v1"
+        elif "integrate.api.nvidia.com" in primary_base:
             primary_base = primary_base.replace("integrate.api.nvidia.com", "ai.api.nvidia.com")
 
         primary_headers = {
@@ -388,7 +392,7 @@ class MediaService:
             fallback_model = "gpt-image-1" if primary_model != "gpt-image-1" else primary_model
 
         primary_base = MediaService._resolve_image_base()
-        use_nvidia_genai = MediaService._is_nvidia_image_base(primary_base)
+        use_nvidia_genai = MediaService._is_nvidia_image_base(primary_base) or "qwen" in primary_model.lower()
 
         try:
             if use_nvidia_genai:
