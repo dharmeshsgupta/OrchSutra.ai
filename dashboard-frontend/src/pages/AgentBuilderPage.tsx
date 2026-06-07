@@ -136,7 +136,7 @@ const AgentBuilderPage: React.FC = () => {
     try {
       let payloadInput = spec.input;
       if (livePreviewMode === 'image' && !payloadInput.startsWith('/image')) {
-        payloadInput = `/image model=qwen ${payloadInput}`;
+        payloadInput = `/image model=alibaba/qwen-image ${payloadInput}`;
       }
       
       const payload = { ...spec, input: payloadInput, memory: { ...spec.memory, session_id: spec.memory.session_id || null }, rag: { ...spec.rag, collection: spec.rag.collection || null } };
@@ -177,7 +177,7 @@ const AgentBuilderPage: React.FC = () => {
     try {
       let finalInput = quickChatInput;
       if (livePreviewMode === 'image' && !finalInput.startsWith('/image')) {
-        finalInput = `/image model=qwen ${finalInput}`;
+        finalInput = `/image model=alibaba/qwen-image ${finalInput}`;
       }
       const r = await fetchWithAuth(`${agentEngineUrl}/v1/build/agent/${id}/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: finalInput }) });
       const d = await r.json();
