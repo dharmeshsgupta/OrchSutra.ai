@@ -26,16 +26,16 @@ def init_firebase():
         # Fallback for local run
         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         key_path = os.path.join(base_dir, "openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json")
-    
-    # If still not found, try the exact filename in current working directory
-    if not os.path.exists(key_path):
-        key_path = "./openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json"
 
     try:
+        # Check if it's a JSON string FIRST before checking os.path.exists
         if key_path.strip().startswith("{"):
             info = json.loads(key_path)
             cred = credentials.Certificate(info)
         else:
+            # If still not found, try the exact filename in current working directory
+            if not os.path.exists(key_path):
+                key_path = "./openrouter-51e78-firebase-adminsdk-fbsvc-a8d3902ad5.json"
             cred = credentials.Certificate(key_path)
 
         firebase_admin.initialize_app(cred, name="agent-engine")
