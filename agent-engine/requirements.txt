@@ -1,0 +1,29 @@
+# ── Core API ──
+fastapi
+uvicorn
+httpx
+pydantic
+pydantic-settings
+python-dotenv
+
+# ── Authentication ──
+# LESSON: This was the missing package!
+# agent-engine/src/engine/auth.py has: import firebase_admin
+# But firebase-admin was NOT in requirements.txt → ModuleNotFoundError crash
+firebase-admin
+
+# ── LLM Orchestration ──
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langgraph>=0.2.0
+tiktoken>=0.7.0
+
+# ── Vector Store / RAG ──
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+
+# ── Database ──
+aiosqlite>=0.20.0
+sqlalchemy>=2.0.0
+

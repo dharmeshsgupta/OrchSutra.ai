@@ -1,0 +1,163 @@
+.pricing-page {
+  min-height: 100vh;
+  background: radial-gradient(1200px 600px at 90% -20%, rgba(66, 133, 244, 0.16), transparent 55%),
+              radial-gradient(900px 500px at -10% 10%, rgba(234, 67, 53, 0.12), transparent 50%),
+              #0a0a0f;
+  color: #e7e7ea;
+}
+
+.pricing-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.2rem 1.2rem 3rem;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.pricing-kicker {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #8db3ff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pricing-header h1 {
+  margin: 0.4rem 0 0.45rem;
+  font-size: clamp(1.5rem, 2.7vw, 2.4rem);
+  color: #f5f7ff;
+  letter-spacing: -0.02em;
+}
+
+.pricing-header p {
+  margin: 0;
+  color: #a8adbd;
+  font-size: 0.98rem;
+}
+
+.pricing-plan-toggle {
+  margin: 1.25rem auto 1.4rem;
+  display: flex;
+  width: fit-content;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.25rem;
+  gap: 0.25rem;
+}
+
+.pricing-plan-toggle button {
+  border: none;
+  background: transparent;
+  color: #b8bfd0;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pricing-plan-toggle button.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #4285f4, #6366f1);
+}
+
+.pricing-table-wrap {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  overflow: auto;
+  background: rgba(16, 17, 25, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+.pricing-table th,
+.pricing-table td {
+  padding: 0.7rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.pricing-table th {
+  background: rgba(255, 255, 255, 0.03);
+  color: #d6d9e6;
+  font-size: 0.84rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pricing-table td.feature-col,
+.pricing-table th:first-child {
+  text-align: left;
+  min-width: 220px;
+}
+
+.pricing-table .selected {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+.pricing-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.pricing-pill.ok {
+  background: rgba(52, 168, 83, 0.16);
+  color: #66d68f;
+}
+
+.pricing-pill.no {
+  background: rgba(234, 67, 53, 0.12);
+  color: #ff8f87;
+}
+
+.pricing-pill.basic {
+  background: rgba(251, 188, 5, 0.16);
+  color: #ffd670;
+}
+
+.pricing-cta-row {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.pricing-btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 0.55rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #f0f2f9;
+}
+
+.pricing-btn.solid {
+  border: none;
+  background: linear-gradient(135deg, #4f8dff, #6b63ff);
+}
+
+.pricing-btn.ghost {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@media (max-width: 900px) {
+  .pricing-wrap {
+    padding-top: 1.5rem;
+  }
+}

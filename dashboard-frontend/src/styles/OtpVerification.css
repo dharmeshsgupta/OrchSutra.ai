@@ -1,0 +1,229 @@
+/* ───────── OTP Verification Page ───────── */
+
+.otp-page-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 440px;
+  padding: 2.5rem 2rem 2rem;
+  border-radius: 24px;
+  background: rgba(20, 20, 50, 0.75);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  text-align: center;
+  animation: otpCardFadeIn 0.5s ease;
+}
+
+@keyframes otpCardFadeIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Header area */
+.otp-page-header {
+  margin-bottom: 1.5rem;
+}
+
+.otp-page-icon {
+  font-size: 3rem;
+  margin: 0.75rem 0 0.5rem;
+  animation: otpIconBounce 0.6s ease;
+}
+
+@keyframes otpIconBounce {
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.otp-page-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #e0e0e0;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.otp-page-subtitle {
+  color: #999;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.otp-page-subtitle strong {
+  color: #ccc;
+  font-weight: 600;
+}
+
+/* Alerts (reuse login page alert styles) */
+.otp-page-card .alert {
+  margin: 0 0 1rem;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.otp-page-card .alert-error {
+  background: rgba(234, 67, 53, 0.12);
+  border: 1px solid rgba(234, 67, 53, 0.25);
+  color: #f87171;
+}
+
+.otp-page-card .alert-success {
+  background: rgba(52, 168, 83, 0.12);
+  border: 1px solid rgba(52, 168, 83, 0.25);
+  color: #6ee7a0;
+}
+
+/* OTP form */
+.otp-page-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* 6-digit input group */
+.otp-page-input-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.otp-page-input {
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #e0e0e0;
+  outline: none;
+  transition: all 0.25s ease;
+  caret-color: #4285F4;
+}
+
+.otp-page-input:focus {
+  border-color: #4285F4;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
+  transform: translateY(-2px);
+}
+
+.otp-page-input-filled {
+  border-color: #4285F4;
+  background: rgba(66, 133, 244, 0.08);
+}
+
+.otp-page-input-success {
+  border-color: #34A853 !important;
+  background: rgba(52, 168, 83, 0.1) !important;
+  color: #6ee7a0 !important;
+}
+
+.otp-page-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Verify button */
+.otp-page-verify-btn {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+  color: #fff;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 16px rgba(66, 133, 244, 0.3);
+}
+
+.otp-page-verify-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(66, 133, 244, 0.4);
+}
+
+.otp-page-verify-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.otp-page-verify-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Footer */
+.otp-page-footer {
+  margin-top: 1.5rem;
+}
+
+.otp-page-resend {
+  color: #888;
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.otp-page-link {
+  background: none;
+  border: none;
+  color: #4285F4;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+.otp-page-link:hover:not(:disabled) {
+  color: #5a9cf4;
+  text-decoration: underline;
+}
+
+.otp-page-link:disabled {
+  color: #555;
+  cursor: not-allowed;
+}
+
+.otp-page-back {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  color: #777;
+}
+
+.otp-page-back:hover:not(:disabled) {
+  color: #aaa;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 480px) {
+  .otp-page-card {
+    margin: 0 1rem;
+    padding: 2rem 1.25rem 1.5rem;
+    border-radius: 18px;
+  }
+
+  .otp-page-input {
+    width: 42px;
+    height: 50px;
+    font-size: 1.25rem;
+    border-radius: 10px;
+  }
+
+  .otp-page-input-group {
+    gap: 0.45rem;
+  }
+}

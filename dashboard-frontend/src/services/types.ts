@@ -1,0 +1,1 @@
+export interface UserStats { credits: number; activeApiKeys: number; tokensUsedToday: number; } export interface AdminConfig { announcementText: string; isBillingEnabled: boolean; quickStartSteps: Array<{ title: string; description: string; }>; } export interface RecentRequest { id: string; timestamp: string; model: string; tokens: number; cost: number; }

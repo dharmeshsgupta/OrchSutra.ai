@@ -1,0 +1,171 @@
+/* Payments Page Styles */
+.payments-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.payments-header {
+  margin-bottom: 2rem;
+}
+
+.payments-header h1 {
+  color: #333;
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.credits-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.credits-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+}
+
+.credits-card h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+}
+
+.credits-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.credits-amount {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.credits-label {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-top: 0.5rem;
+}
+
+.credits-info {
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.btn-large {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  background: white;
+  color: #667eea;
+  margin-top: 1rem;
+}
+
+.btn-large:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.9);
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pricing-info {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pricing-info h3 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.pricing-table {
+  width: 100%;
+}
+
+.pricing-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.pricing-row.header {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
+.pricing-col {
+  display: flex;
+  align-items: center;
+}
+
+.usage-section {
+  margin-top: 2rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.usage-section h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .payments-container {
+    padding: 1rem;
+  }
+
+  .credits-section {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .pricing-row.header {
+    display: none;
+  }
+
+  .pricing-row {
+    padding: 1rem;
+  }
+
+  .pricing-col::before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-right: 1rem;
+    min-width: 100px;
+  }
+
+  .credits-amount {
+    font-size: 2rem;
+  }
+}
