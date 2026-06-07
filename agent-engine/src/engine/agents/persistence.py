@@ -45,9 +45,17 @@ class AgentPersistence:
                     created_at TEXT,
                     updated_at TEXT,
                     user_id TEXT NOT NULL,
-                    api_key TEXT NOT NULL
+                    api_key TEXT NOT NULL,
+                    topic_restriction TEXT
                 )
             """)
+            
+            # Simple migration to add the column if the DB already exists
+            try:
+                conn.execute("ALTER TABLE agents ADD COLUMN topic_restriction TEXT")
+            except sqlite3.OperationalError:
+                pass  # Column already exists
+                
             conn.commit()
         logger.info(f"✅ Agent persistence DB ready at {self.db_path}")
 
@@ -68,7 +76,7 @@ class AgentPersistence:
             updated_at=row[12],
             user_id=row[13],
             api_key=row[14],
-            topic_restriction=row[15],
+            topic_restriction=row[15] if len(row) > 15 else None,
         )
 
     # ── CREATE ──────────────────────────────────────────────────────
