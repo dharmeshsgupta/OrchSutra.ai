@@ -800,7 +800,7 @@ const ChatPage: React.FC = () => {
     // Inject Image Mode if active
     if (!imageCommand && !speechCommand && inputMode === 'image') {
       imageCommand = {
-        model: 'stabilityai/stable-diffusion-3-medium',
+        model: 'black-forest-labs/FLUX.1-schnell',
         prompt: rawInput
       };
     }

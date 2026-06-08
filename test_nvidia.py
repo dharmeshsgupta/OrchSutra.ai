@@ -3,8 +3,9 @@ import json
 import urllib.error
 
 urls = [
-    "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-3-medium",
-    "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux-1-dev"
+    "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-3.5-large",
+    "https://ai.api.nvidia.com/v1/genai/stabilityai/sdxl-turbo",
+    "https://ai.api.nvidia.com/v1/genai/stabilityai/stable-diffusion-xl-base-1.0"
 ]
 headers = {
     "Authorization": "Bearer invalid_key",

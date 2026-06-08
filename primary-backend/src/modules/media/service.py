@@ -385,6 +385,36 @@ class MediaService:
         return fb_resp, "fallback"
 
     @staticmethod
+    async def _post_huggingface_genai(
+        primary_model: str,
+        payload: ImageGenerateRequestSchema,
+    ) -> tuple[httpx.Response, str, str]:
+        primary_key = os.getenv("HUGGINGFACE_API_KEY", "").strip() or os.getenv("MEDIA_IMAGE_API_KEY", "").strip()
+        if not primary_key:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Hugging Face API key not configured. Set HUGGINGFACE_API_KEY or MEDIA_IMAGE_API_KEY.",
+            )
+
+        if primary_model.startswith("huggingface/"):
+            primary_model = primary_model.replace("huggingface/", "", 1)
+
+        primary_base = "https://api-inference.huggingface.co/models"
+        primary_headers = {
+            "Authorization": f"Bearer {primary_key}",
+            "Content-Type": "application/json",
+        }
+        
+        primary_body = {
+            "inputs": payload.prompt,
+        }
+
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            resp = await client.post(f"{primary_base}/{primary_model}", json=primary_body, headers=primary_headers)
+        
+        return resp, "primary", primary_model
+
+    @staticmethod
     async def generate_image(payload: ImageGenerateRequestSchema) -> ImageGenerateResponseSchema:
         primary_model = (payload.model or MediaService._primary_image_model()).strip()
         fallback_model = (MediaService._fallback_image_model() or "").strip() or "gpt-image-1"
@@ -393,9 +423,15 @@ class MediaService:
 
         primary_base = MediaService._resolve_image_base()
         use_nvidia_genai = MediaService._is_nvidia_image_base(primary_base) or "qwen" in primary_model.lower()
+        use_huggingface = "black-forest-labs" in primary_model.lower() or primary_model.startswith("huggingface/")
 
         try:
-            if use_nvidia_genai:
+            if use_huggingface:
+                resp, source, used_model = await MediaService._post_huggingface_genai(
+                    primary_model=primary_model,
+                    payload=payload,
+                )
+            elif use_nvidia_genai:
                 resp, source, used_model = await MediaService._post_nvidia_genai_with_optional_fallback(
                     primary_model=primary_model,
                     fallback_model=fallback_model,
@@ -441,8 +477,14 @@ class MediaService:
                 detail = resp.text
             raise HTTPException(status_code=resp.status_code, detail=detail)
 
-        data = resp.json()
-        b64_json, url = MediaService._extract_image_content_from_response(data)
+        content_type = resp.headers.get("content-type", "")
+        if "image/" in content_type:
+            b64_json = base64.b64encode(resp.content).decode("utf-8")
+            url = None
+        else:
+            data = resp.json()
+            b64_json, url = MediaService._extract_image_content_from_response(data)
+            
         if not b64_json and not url:
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
