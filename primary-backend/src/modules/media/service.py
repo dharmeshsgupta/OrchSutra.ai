@@ -417,13 +417,18 @@ class MediaService:
     @staticmethod
     async def generate_image(payload: ImageGenerateRequestSchema) -> ImageGenerateResponseSchema:
         primary_model = (payload.model or MediaService._primary_image_model()).strip()
+        
+        # Override cached frontend models directly to FLUX
+        if "stable-diffusion-3-medium" in primary_model or "qwen-image" in primary_model:
+            primary_model = "black-forest-labs/FLUX.1-schnell"
+            
         fallback_model = (MediaService._fallback_image_model() or "").strip() or "gpt-image-1"
         if fallback_model == primary_model:
             fallback_model = "gpt-image-1" if primary_model != "gpt-image-1" else primary_model
 
         primary_base = MediaService._resolve_image_base()
         use_nvidia_genai = MediaService._is_nvidia_image_base(primary_base) or "qwen" in primary_model.lower()
-        use_huggingface = "black-forest-labs" in primary_model.lower() or primary_model.startswith("huggingface/")
+        use_huggingface = "black-forest-labs" in primary_model.lower() or primary_model.startswith("huggingface/") or "stabilityai" in primary_model.lower()
 
         try:
             if use_huggingface:
