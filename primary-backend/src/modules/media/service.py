@@ -399,7 +399,7 @@ class MediaService:
         if primary_model.startswith("huggingface/"):
             primary_model = primary_model.replace("huggingface/", "", 1)
 
-        primary_base = "https://api-inference.huggingface.co/models"
+        primary_base = "https://router.huggingface.co/hf-inference/models"
         primary_headers = {
             "Authorization": f"Bearer {primary_key}",
             "Content-Type": "application/json",
