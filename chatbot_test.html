@@ -32,6 +32,10 @@
     
     <div class="settings-panel">
         <div class="form-group">
+            <label for="backendUrl">Backend URL:</label>
+            <input type="text" id="backendUrl" value="http://localhost:3000" />
+        </div>
+        <div class="form-group">
             <label for="apiKey">API Key:</label>
             <input type="password" id="apiKey" placeholder="Paste your generated API Key here..." />
         </div>
@@ -58,7 +62,6 @@
 </div>
 
 <script>
-    const backendBaseUrl = 'http://localhost:3000';
     const chatHistory = document.getElementById('chatHistory');
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -72,9 +75,11 @@
 
     // Always load model IDs from backend to avoid stale hardcoded options.
     loadModels();
+    document.getElementById('backendUrl').addEventListener('change', loadModels);
 
     async function loadModels() {
         try {
+            const backendBaseUrl = document.getElementById('backendUrl').value.replace(/\/$/, "");
             const response = await fetch(backendBaseUrl + '/models');
             const data = await response.json();
             if (!response.ok || !data.models || !Array.isArray(data.models)) {
@@ -110,7 +115,8 @@
         messages.push({ role: 'user', content: text });
 
         try {
-            // Send to your backend router running on port 3000
+            // Send to your backend router
+            const backendBaseUrl = document.getElementById('backendUrl').value.replace(/\/$/, "");
             const response = await fetch(backendBaseUrl + '/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -138,7 +144,8 @@
                 messages.push({ role: 'assistant', content: assistantMessage });
             }
         } catch (error) {
-            appendMessage('error', 'Network/CORS error: Make sure http://localhost:3000 is running and allows CORS! Detail: ' + error.message);
+            const backendBaseUrl = document.getElementById('backendUrl').value;
+            appendMessage('error', 'Network/CORS error: Make sure ' + backendBaseUrl + ' is running and allows CORS! Detail: ' + error.message);
             messages.pop();
         } finally {
             messageInput.disabled = false;
