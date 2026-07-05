@@ -35,11 +35,11 @@ async def lifespan(app: FastAPI):
     try:
         init_firebase()
     except Exception as e:
-        print(f"⚠️  Firebase init skipped (set FIREBASE_SERVICE_ACCOUNT_KEY): {e}")
+        print(f"[WARNING] Firebase init skipped (set FIREBASE_SERVICE_ACCOUNT_KEY): {e}")
 
     # 2. Create all tables
     await init_db()
-    print("✅ Database tables ready")
+    print("[INFO] Database tables ready")
 
     # 3. Seed initial data
     async with async_session() as db:
@@ -50,7 +50,7 @@ async def lifespan(app: FastAPI):
         snapshot_count = await db.scalar(select(func.count()).select_from(RankingSnapshot))
         if not snapshot_count:
             await run_daily_ingestion(db)
-            print("✅ Initial ranking snapshot ingestion completed")
+            print("[INFO] Initial ranking snapshot ingestion completed")
         else:
             today = datetime.utcnow().date()
             today_count = await db.scalar(
@@ -58,7 +58,7 @@ async def lifespan(app: FastAPI):
             )
             if not today_count:
                 await run_daily_ingestion(db, snapshot_date=today)
-                print("✅ Today's ranking snapshot ingestion completed")
+                print("[INFO] Today's ranking snapshot ingestion completed")
 
     # 5. Start daily scheduler for ranking ingestion
     scheduler = AsyncIOScheduler()
@@ -75,7 +75,7 @@ async def lifespan(app: FastAPI):
     )
     scheduler.start()
     app.state.scheduler = scheduler
-    print("✅ Daily ranking ingestion scheduler started (01:00)")
+    print("[INFO] Daily ranking ingestion scheduler started (01:00)")
 
     yield  # app runs here
 
