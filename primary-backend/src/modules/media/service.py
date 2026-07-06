@@ -431,15 +431,15 @@ class MediaService:
         use_huggingface = "black-forest-labs" in primary_model.lower() or primary_model.startswith("huggingface/") or "stabilityai" in primary_model.lower()
 
         try:
-            if use_huggingface:
-                resp, source, used_model = await MediaService._post_huggingface_genai(
-                    primary_model=primary_model,
-                    payload=payload,
-                )
-            elif use_nvidia_genai:
+            if use_nvidia_genai:
                 resp, source, used_model = await MediaService._post_nvidia_genai_with_optional_fallback(
                     primary_model=primary_model,
                     fallback_model=fallback_model,
+                    payload=payload,
+                )
+            elif use_huggingface:
+                resp, source, used_model = await MediaService._post_huggingface_genai(
+                    primary_model=primary_model,
                     payload=payload,
                 )
             else:
