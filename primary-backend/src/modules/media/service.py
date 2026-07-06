@@ -427,7 +427,8 @@ class MediaService:
             fallback_model = "gpt-image-1" if primary_model != "gpt-image-1" else primary_model
 
         primary_base = MediaService._resolve_image_base()
-        use_nvidia_genai = MediaService._is_nvidia_image_base(primary_base) or "qwen" in primary_model.lower()
+        primary_key = MediaService._resolve_image_key(use_nvidia=True) or ""
+        use_nvidia_genai = MediaService._is_nvidia_image_base(primary_base) or "qwen" in primary_model.lower() or primary_key.startswith("nvapi-")
         use_huggingface = "black-forest-labs" in primary_model.lower() or primary_model.startswith("huggingface/") or "stabilityai" in primary_model.lower()
 
         try:
